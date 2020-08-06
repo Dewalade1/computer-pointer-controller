@@ -24,16 +24,16 @@ This project uses four different models that work together in a structured pipel
 
 For technical details about the models please click the model names.
 
-!['Pipeline illustration'](./img/pipeline.png')
+!['Pipeline illustration'](./img/pipeline.png)
 
 ## Project Set Up and Installation
 
 Follow the the steps below to setup this project. Before doing this, make sure you have [the latest version of openvino2020](https://software.intel.com/content/www/us/en/develop/tools/openvino-toolkit/choose-download.html) and the [pyautogui python library](https://pyautogui.readthedocs.io/en/latest/) installed. To follow these instructions  download openvino2020 on [mac OS](https://docs.openvinotoolkit.org/latest/openvino_docs_install_guides_installing_openvino_macos.html), [Linux](https://docs.openvinotoolkit.org/latest/openvino_docs_install_guides_installing_openvino_linux.html), and [Windows 10](https://docs.openvinotoolkit.org/latest/openvino_docs_install_guides_installing_openvino_windows.html). Also visit this [page]() to learn more about the [openvino toolkit](https://docs.openvinotoolkit.org/latest/index.html).
 
-To install the latest release of pyautogui. Use the `pip install` command as shown below:
+To install the application's requirements. Use the `pip install` command as shown below:
 
 ```bash
- pip install pyautogui
+ pip install -r requirements.txt
 ```
 
 Now that the required installations are out of the way. We can setup the project:
@@ -59,7 +59,79 @@ cd computer-pointer-controller
 
 python3 src/main.py --input_type cam
 ```
+## Project structure
 
+```
+.computer-mouse-controller
+├── bin
+│   └── demo.mp4
+├── env
+│   ├── bin
+│   │   ├── activate
+│   │   ├── activate.csh
+│   │   ├── activate.fish
+│   │   ├── easy_install
+│   │   ├── easy_install-3.6
+│   │   ├── pip
+│   │   ├── pip3
+│   │   ├── pip3.6
+│   │   ├── python -> python3
+│   │   └── python3 -> /usr/bin/python3
+│   ├── include
+│   ├── lib
+│   ├── lib64 -> lib
+│   ├── pyvenv.cfg
+│   └── share
+├── img
+│   ├── advanced-benchmark-1000-samples.png
+│   ├── advanced-benchmark-100-samples.png
+│   ├── effective-cpu-utilization.png
+│   └── pipeline.png
+├── intel
+│   ├── face-detection-adas-0001
+│   │   ├── FP16
+│   │   │   ├── face-detection-adas-0001.bin
+│   │   │   └── face-detection-adas-0001.xml
+│   │   └── FP32
+│   │       ├── face-detection-adas-0001.bin
+│   │       └── face-detection-adas-0001.xml
+│   ├── gaze-estimation-adas-0002
+│   │   ├── FP16
+│   │   │   ├── gaze-estimation-adas-0002.bin
+│   │   │   └── gaze-estimation-adas-0002.xml
+│   │   └── FP32
+│   │       ├── gaze-estimation-adas-0002.bin
+│   │       └── gaze-estimation-adas-0002.xml
+│   ├── head-pose-estimation-adas-0001
+│   │   ├── FP16
+│   │   │   ├── head-pose-estimation-adas-0001.bin
+│   │   │   └── head-pose-estimation-adas-0001.xml
+│   │   └── FP32
+│   │       ├── head-pose-estimation-adas-0001.bin
+│   │       └── head-pose-estimation-adas-0001.xml
+│   └── landmarks-regression-retail-0009
+│       ├── FP16
+│       │   ├── landmarks-regression-retail-0009.bin
+│       │   └── landmarks-regression-retail-0009.xml
+│       └── FP32
+│           ├── landmarks-regression-retail-0009.bin
+│           └── landmarks-regression-retail-0009.xml
+├── outputs
+│   └── outputs.txt
+├── README.md
+├── requirements.txt
+├── src
+│   ├── face_detection.py
+│   ├── facial_landmarks_detection.py
+│   ├── gaze_estimation.py
+│   ├── head_pose_estimation.py
+│   ├── input_feeder.py
+│   ├── main.py
+│   └── mouse_controller.py
+└── vtune_scripts
+    ├── cpu_script.sh
+    └── gpu_script.sh
+```
 
 ## Demo
 The application cintains a sample video which is already setup to be used for a demo. To see a demo of the application, at the root folder of the app execute these comands:
@@ -237,7 +309,7 @@ This sections contains results of benchmark tests on the model performed with th
 #### Result Table
 
 | Hardware | Models Precisions |  Batch size | Total model init time (s) | Total Model Load Time (s) | App init Time (s) | Total inference time (s) | Avg. Inference speed (fps) |
-|----------|-------------------|---------------------------|--------------------------|----------------------|------------|
+|----------|-------------------|-------------|---------------------------|---------------------------|-------------------|--------------------------|------------------------------|
 | CPU  | FP32 | 1   | 0.10 | 0.71 | 0.81 | 31.52 | 19.04 |
 | CPU  | FP16 | 1   | 0.07 | 0.67 | 0.75 | 30.97 | 19.21 |
 | CPU  | FP32 | 25  | 0.07 | 0.73 | 0.80 | 1.29  | 18.47 |
@@ -295,34 +367,42 @@ I
 #### 100 Samples dataset
 
  | Hardware  | Batch size | streams | Inference type | model Latency (ms) | model throughput (fps) |
-|----------|-------------------|-------------|----------|----------------------|--------------------------|----------------------|------------|
-| CPU  | 1   | 1  | sync  | 38.60 | 32.55 |
-| CPU  | 1   | 2  | Async | 77.12 | 22.69 | 
-| CPU  | 25  | 1  | sync  | 999.34 | 23.88 |
-| CPU  | 25  | 2  | Async | 1960.04 | 23.98 |
-| CPU  | 50  | 1  | sync  | 2000.16 | 23.70 |
-| CPU  | 50  | 2  | Async | 4043.23 | 23.95 |
-| CPU  | 75  | 1  | sync  | 2356.75 | 26.56 |
-| CPU  | 75  | 2  | Async | 3672.63 | 25.00 |
+|------------|------------|---------|----------------|---------------------|--------------------------|
+| CPU  | 1   | 1  | sync  | 36.78 | 25.6 |
+| CPU  | 1   | 2  | Async | 71.46 | 26.70 | 
+| CPU  | 26  | 1  | sync  | 984.44 | 26.13 |
+| CPU  | 26  | 2  | Async | 2091.21 | 24.92 |
+| CPU  | 51  | 1  | sync  | 2132.31 | 23.63 |
+| CPU  | 51  | 2  | Async | 4534.11 | 22.30 |
+| CPU  | 76  | 1  | sync  | 3147.46 | 23.93 |
+| CPU  | 76  | 2  | Async |10707.96 | 13.34 |
 
 #### 1000 Samples dataset
 
  | Hardware | Models Precisions |  Batch size | streams | Inference type | model Latency (ms) | model throughput (fps) |
-|----------|-------------------|-------------|----------|----------------------|--------------------------|----------------------|------------|
-| CPU  | FP16 | 1   | 1  | sync  | 38.70 | 24.00 |
-| CPU  | FP16 | 1   | 2  | Async | 84.25 | 22.29 |
-| CPU  | FP16 | 25  | 1  | sync  | 1101.90 | 22.62 |
-| CPU  | FP16 | 25  | 2  | Async | 2344.88 | 21.11 |
-| CPU  | FP16 | 50  | 1  | sync  | 2165.22 | 23.03 |
-| CPU  | FP16 | 50  | 2  | Async | 4064.98 | 24.00 |
-| CPU  | FP16 | 75  | 1  | sync  | 2872.7 | 26.45 |
-| CPU  | FP16 | 75  | 2  | Async  | 3456.2 | 25.78 |
+|----------|--------------------|-------------|----------|---------------|--------------------|-------------|
+| CPU  | FP16 | 1   | 1  | sync  | 42.72   | 21.09 |
+| CPU  | FP16 | 1   | 2  | Async | 80.18   | 22.10 |
+| CPU  | FP16 | 26  | 1  | sync  | 1028.79 | 24.41 |
+| CPU  | FP16 | 26  | 2  | Async | 2089.53 | 24.33 |
+| CPU  | FP16 | 51  | 1  | sync  | 2167.32 | 22.54 |
+| CPU  | FP16 | 51  | 2  | Async | 3044.62 | 24.84 |
+| CPU  | FP16 | 76  | 1  | sync  | 4089.82 | 24.26 |
+| CPU  | FP16 | 76  | 2  | Async | 4095.45 | 25.78 |
 
-#### Result of Results
+#### GRAPH OF 100 SAMPLE DATASET
 
-From the results, The difference in throughput between 100 and 1000 sample datasets is neglidgible. The 1000 sample dataset benchark tests record slightly higher throughput than the 100 dataset benchmark tests. There is also a steady rise in throughput as the batch size increased. The throughput was also higher for throughput for async inferebce than there was for syync inference.
+![Advance-benchmarking-with-100-sample-dataset](./img/advanced-benchmark-100-samples.png)
 
-As the batch size increased, the latency of the model increased as well. The 1000 sample dataset benchark tests record slightly lower latency than the 100 dataset benchmark tests. At a batch size of 1, the difference in latency of the sync and async inferences was neglidgible but this difference continued to increase as the batch size was iincreased till it became a very large difference of 1000ms. The trend suggests that the difference would continue to increase as the batch size increases. The throughput was also higher for throughput for async inferebce than there was for syync inference. Because of the increasing difference in model latency of sync and async inference, a maximum batch size of 30 is recommended.
+#### GRAPH OF 1000 SAMPLE DATASET
+
+![Advance-benchmarking-with-1000-sample-dataset](./img/advanced-benchmark-1000-samples.png)
+
+#### Summary of Results
+
+For the 100-sample dataset benchmark, as the batch size increased, the latency of the model increased as well. The 1000 sample dataset benchark tests record slightly lower latency than the 100 dataset benchmark tests. At a batch size of 1, the difference in latency of the sync and async inferences was neglidgible but this difference continued to increase as the batch size was increased till it became a very large differences of thousands of milliseconds. The trend suggests that the difference would continue to increase as the batch size increases. The throughput was also higher for throughput for async inferebce than there was for syync inference. Because of the increasing difference in model latency of sync and async inference, a maximum batch size of 30 is recommended.
+
+The 1000-sample-dataset benchmark results seemed to follow a linear treand with some outliers at certain intervals. The result showed steady throughput values with a few outliers at the later stages of the graph. As the batch-size was increasing, the Latency seems to increase linearly with increase in batch size.
 
 In conclusion, There is higher latency for async inference than for sync inference. The throughput is higher for sync inference than for Async inference.  sync inference would be better for optimal performance if the application will be used for long hours.
 
@@ -358,15 +438,19 @@ Microarchitecture Usage: 23.2%
 | [Others]	| N/A* | 0.928s |
 
 #### Top Tasks
+
 | Task Type | Task Time | Task Count |
 | void cv::utils::logging::LogTagManager::assign(const string&, cv::utils::logging::LogTag*)| 0.000s | 1 |
 | cv::utils::logging::LogTag* cv::utils::logging::LogTagManager::get(const string&) |	0.000s | 1 |
 
 #### Effective CPU Utilization Table
+
 | Simultaneously Utilized Logical CPUs | Elapsed Time | Utilization threshold |
 | 0 | 5.3801632009 | Idle |
 | 1	| 2.280570021 | Poor |
 | 2 |	0	|  Ideal |
+
+![Effective CPU Utilization](./img/effective-cpu-utilization.png)
 
 #### Summary of Results
 
@@ -425,11 +509,23 @@ In cases of low lighting, the faces in the frames might not be detected by the a
 
 To install this package, the installation commands are:
 ```bash
-    sudo apt-get update -y
+sudo apt-get update -y
 
-    sudo apt-get install -y guvcview
+sudo apt-get install -y guvcview
 ```
 
 #### Blank video frame or empty webcam input
 
-In the case where a blank video is passed in as input or the camera doesn't detect any faces in the screen the app would flag that as an error and automatically shutdown. This is done primarily to minimize unecessary resourse usages by the application.
+In the case where a blank video is passed in as input or the camera doesn't detect any faces in the frame the app would flag that as an error and move on to the next frame. The app would go throught the entire input this way. The block of code in lines 275 - 283 of the main.py file does just this. Below is a snippet of it:
+
+```bash
+                if self.face_coords == []:
+                    log.info('[ Main ] No face detected.. Waiting for you to stare at the camera')
+                    f.write('[ Error ] No face was detected')
+                    
+                else:
+                    self.head_pose_angles=self.head_pose_model.predict(self.face_crop)
+                    self.left_eye_coords, self.left_eye_image, self.right_eye_coords, self.right_eye_image=self.landmarks_model.predict(self.face_crop)
+                    self. x, self.y = self.gaze_model.predict(self.left_eye_image, self.right_eye_image, self.head_pose_angles)
+                    log.info(f'[ Main ] Relative pointer coordinates: [{self.x:.2f}, {self.y:.2f}]')
+```
