@@ -285,19 +285,19 @@ The scenarios used include:
 
 1. CPU Hardware with Model precision FP16
 
-    command used:
+ command used:
 
-    ```bash
-    python3 src/main.py --input_type demo --precision high --batch_size <batch size choice>
-    ```
+```bash
+python3 src/main.py --input_type demo --precision high --batch_size <batch size choice>
+```
 
 2. CPU Hardware with Model precision FP32
 
 command used:
     
-    ```bash
+```bash
     python3 src/main.py --input_type demo --face_model intel/face-detection-adas-0001/FP32/face-detection-adas-0001 --face_landmark_model intel/landmarks-regression-retail-0009/FP32/landmarks-regression-retail-0009 --head_pose_model intel/head-pose-estimation-adas-0001/FP32/head-pose-estimation-adas-0001 --gaze_model intel/gaze-estimation-adas-0002/FP32/gaze-estimation-adas-0002 --precision high --batch_size <batch size choice>
-    ```
+```
 
 The results of these benchmark scenarios can be found in the Results section
 
@@ -320,6 +320,7 @@ This sections contains results of benchmark tests on the model performed with th
 | CPU  | FP16 | 75  | 0.06 | 0.59 | 0.64 | 0.34  | 19.39 |
 | CPU  | FP32 | 100 | 0.11 | 0.67 | 0.78 | 0.31  | 16.28 |
 | CPU  | FP16 | 100 | 0.07 | 0.59 | 0.66 | 0.34  | 13.47 |
+
 
 #### Summary of Results
 
@@ -437,20 +438,28 @@ Microarchitecture Usage: 23.2%
 | sched_yield | libc.so.6 | 0.140s |
 | [Others]	| N/A* | 0.928s |
 
+
+
 #### Top Tasks
 
 | Task Type | Task Time | Task Count |
+|-----------|-----------|------------|
 | void cv::utils::logging::LogTagManager::assign(const string&, cv::utils::logging::LogTag*)| 0.000s | 1 |
 | cv::utils::logging::LogTag* cv::utils::logging::LogTagManager::get(const string&) |	0.000s | 1 |
+
+
 
 #### Effective CPU Utilization Table
 
 | Simultaneously Utilized Logical CPUs | Elapsed Time | Utilization threshold |
+|--------------------------------------|--------------|-----------------------|
 | 0 | 5.3801632009 | Idle |
 | 1	| 2.280570021 | Poor |
 | 2 |	0	|  Ideal |
 
 ![Effective CPU Utilization](./img/effective-cpu-utilization.png)
+
+
 
 #### Summary of Results
 
@@ -482,7 +491,8 @@ The application also logs the Gaze vector outputs and inference statistics in th
 
 - Batch count: Number of batches processed before inference was finished or interrupted.
 
-#### Logged Last outputs
+
+#### Final outputs that were logged
 - Face coordinates: Coordinates of the first face in the frame detected by the face detection model.
 
 - Left eye coordinates: Coordinates of the left eye of the face detected by the facial landmark model.
