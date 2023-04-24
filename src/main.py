@@ -177,7 +177,7 @@ class MoveMouse:
 
         self.model_load_time=time.time() - model_load_start
         self.app_init_time=time.time() - init_start_time
-        log.info('[ Main ] All moadels loaded to Inference Engine\n')
+        log.info('[ Main ] All models loaded to Inference Engine\n')
 
         return None
     
@@ -292,7 +292,7 @@ class MoveMouse:
                     if self.show_output:
                         self.draw_outputs(frame)
 
-                    cv2.imshow('Computer Pointer Controller Output', frame)
+                    cv2.imshow('Gaze Output', frame)
                     self.inference_speed.append( self.count_batch/ self.total_processing_time)
                     self.avg_inference_speed = sum(self.inference_speed)/len(self.inference_speed)
 
