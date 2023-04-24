@@ -38,9 +38,8 @@ class HeadPoseEstimation:
         except Exception as e:
             raise ValueError('[Head Pose Estimation Module] Could not initialize the network. Ensure that model path is correct')
 
-        self.input_name=next(iter(self.model.inputs))
-        self.input_shape=self.model.inputs[self.input_name].shape 
-        self.output_name='head_pose_angles'
+        self.input_name=next(iter(self.model.input_info))
+        self.input_shape = self.model.input_info[self.input_name].input_data.shape
         self.output_shape=None
 
         return None
@@ -79,10 +78,10 @@ class HeadPoseEstimation:
         self.image_height = image.shape[0]
 
         self.input_image = self.preprocess_input(image)
-        self.infer.start_async(request_id=0, inputs={self.input_name: self.input_image})
+        self.infer_request = self.infer.start_async(request_id=0, inputs={self.input_name: self.input_image})
 
-        if self.infer.requests[0].wait(-1)==0:
-            get_output = self.infer.requests[0].outputs
+        if self.infer_request.wait() == 0:
+            get_output = self.infer_request.output_blobs
             head_pose_angles = self.preprocess_output(get_output)
 
         return head_pose_angles
@@ -101,7 +100,9 @@ class HeadPoseEstimation:
         '''
 
         supported_layers = self._ie_core.query_network(self.model, self.device)
-        unsupported_layers = [layer for layer in self.model.layers.keys() if layer not in supported_layers]
+        unsupported_input_layers = [layer for layer in self.model.input_info.keys() if layer not in supported_layers]
+        unsupported_output_layers = [layer for layer in self.model.outputs.keys() if layer not in supported_layers]
+        unsupported_layers = unsupported_input_layers + unsupported_output_layers
 
         if (len(unsupported_layers) != 0) and (self.extension and self.device is not None):
             self.core.add_extension(self.extension, self.device)
@@ -150,9 +151,9 @@ class HeadPoseEstimation:
         head_pose_angles = extracted yaw, pitch and roll angles of the head as a numpy array
         '''
         
-        yaw_angle_extract = outputs.get('angle_y_fc')
-        pitch_angle_extract = outputs.get('angle_p_fc')
-        roll_angle_extract = outputs.get('angle_r_fc')
+        yaw_angle_extract = np.array(outputs.get('angle_y_fc').buffer)
+        pitch_angle_extract = np.array(outputs.get('angle_p_fc').buffer)
+        roll_angle_extract = np.array(outputs.get('angle_r_fc').buffer)
 
         yaw_angle = yaw_angle_extract[0][0]
         pitch_angle = pitch_angle_extract[0][0]

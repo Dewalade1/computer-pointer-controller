@@ -35,7 +35,7 @@ class InputFeeder:
         if self.input_type=='video' or self.input_type=='image':
             self.input_file=input_file
         elif self.input_type=='demo':
-            self.input_file='bin/demo.mp4'
+            self.input_file='data/demo.mp4'
 
         if self.input_type!='cam':
             self.input_extension=os.path.splitext(self.input_file)[1].lower()
