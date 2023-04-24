@@ -38,9 +38,7 @@ class GazeEstimation:
         except Exception as e:
             raise ValueError('[Gaze Estimation Module] Could not initialize the network. Ensure that model path is correct')
 
-        # self.input_name=next(iter(self.model.inputs))
         self.input_blob=next(iter(self.model.input_info))
-        # self.input_shape=self.model.inputs['left_eye_image'].shape
         self.input_shape = self.model.input_info['left_eye_image'].input_data.shape
         self.output_blob=next(iter(self.model.outputs))
         self.output_blob=self.model.outputs[self.output_blob].shape
@@ -92,12 +90,7 @@ class GazeEstimation:
                                                      self.right_eye_name: self.right_eye_image,
                                                      self.head_pose_names: self.head_pose_angles})
 
-        # if self.infer.requests[0].wait(-1)==0:
-        #     gaze_vector = self.inference_handler.outputs
-        #     gaze_x, gaze_y = self.preprocess_output(gaze_vector)
-
         if self.infer_request.wait() == 0:
-            # print(self.infer_request.output_blobs)
             get_output = self.infer_request.output_blobs
             gaze_x, gaze_y = self.preprocess_output(get_output)
 
@@ -118,12 +111,8 @@ class GazeEstimation:
         '''
 
         supported_layers=self._ie_core.query_network(self.model, self.device)
-        # print(supported_layers)
-        # unsupported_layers=[layer for layer in self.model.layers.keys() if layer not in supported_layers]
         unsupported_input_layers=[layer for layer in self.model.input_info.keys() if layer not in supported_layers]
-        # print(unsupported_input_layers)
         unsupported_output_layers=[layer for layer in self.model.outputs.keys() if layer not in supported_layers]
-        # print(unsupported_output_layers)
         unsupported_layers = unsupported_input_layers + unsupported_output_layers
 
         if (len(unsupported_layers) != 0) and (self.extension and self.device is not None):
